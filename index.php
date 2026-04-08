@@ -1,14 +1,19 @@
 <?php
 session_start();
 
-// 1. DATABASE SETTINGS
-$host = "localhost";
-$db_user = "root";
-$db_pass = "";
-$db_name = "chatting";
+// 1. DATABASE SETTINGS (Ibi nibyo wahinduye)
+$host = "127.0.0.1";   // Ntukoreshe localhost, kuri Windows XAMPP byoroshye 127.0.0.1
+$user = "root";        // XAMPP default username
+$pass = "";            // XAMPP default password (empty)
+$db   = "chatting";    // Izina rya database yawe
 
 // Connect to MySQL
-$conn = new mysqli($host, $db_user, $db_pass, $db_name);
+$conn = new mysqli($host, $user, $pass, $db);
+
+// Kugenzura niba connection yagenze neza
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 
 // 2. LOGIN LOGIC
 $error_message = "";
@@ -30,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
 
-            // REDIRECT TO HOME.PHP (Your new feed)
+            // REDIRECT TO HOME.PHP
             header("Location: home.php");
             exit();
         } else {
@@ -79,7 +84,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 opacity: 0;
                 transform: translateY(20px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -140,10 +144,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             box-shadow: 0 5px 15px rgba(252, 0, 255, 0.3);
         }
 
-        .btn-login:active {
-            transform: translateY(0);
-        }
-
         .error {
             background: rgba(255, 77, 77, 0.1);
             color: #ff4d4d;
@@ -179,7 +179,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <p class="subtitle">Enter your kingdom</p>
 
         <?php if ($error_message): ?>
-            <div class="error"><i class="fa-solid fa-circle-exclamation"></i> <?php echo $error_message; ?></div>
+            <div class="error"><?php echo $error_message; ?></div>
         <?php endif; ?>
 
         <form method="POST" action="" id="loginForm">
@@ -190,13 +190,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <div class="footer-links">
             <span style="color: #444;">Don't have an account?</span>
-            <a href="create.php" class="btn-create">Create one</a><br>
-
+            <a href="create.php" class="btn-create">Create one</a>
         </div>
     </div>
 
     <script>
-        // Smooth UI: Change button text to "Verifying..." to prevent double-clicks
         const form = document.getElementById('loginForm');
         const btn = document.getElementById('loginBtn');
 
@@ -208,5 +206,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </script>
 
 </body>
-
 </html>
